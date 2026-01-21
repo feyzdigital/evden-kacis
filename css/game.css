@@ -1,0 +1,204 @@
+/**
+ * OYUN ALANI STİLLERİ
+ */
+
+#game-container {
+    position: relative;
+    width: 800px;
+    height: 520px;
+    background: #0a0a12;
+    border: 4px solid #334155;
+    box-shadow: 0 0 50px rgba(0,0,0,0.5);
+}
+
+#game-screen {
+    display: none;
+    position: absolute;
+    inset: 0;
+}
+
+#game-screen.active {
+    display: block;
+}
+
+#game-canvas {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    width: 800px;
+    height: 440px;
+    overflow: hidden;
+    background: #1a1a2e;
+}
+
+#game-canvas.shake {
+    animation: shake 0.3s ease-in-out;
+}
+
+#rooms-container {
+    position: absolute;
+    inset: 0;
+}
+
+.room {
+    position: absolute;
+    inset: 0;
+    display: none;
+}
+
+.room.active {
+    display: block;
+}
+
+.room-salon {
+    background: linear-gradient(180deg, #2d1f3d 0%, #1a1525 50%, #3d2f1a 100%);
+}
+
+.room-mutfak {
+    background: linear-gradient(180deg, #1f2d3d 0%, #151a25 50%, #1a2d3d 100%);
+}
+
+.room-yatak {
+    background: linear-gradient(180deg, #3d1f2d 0%, #251520 50%, #2d1a3d 100%);
+}
+
+.room-bodrum {
+    background: linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 50%, #1a1a1a 100%);
+}
+
+/* Mobilyalar */
+.furniture {
+    position: absolute;
+    border: 2px solid rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.furniture-sofa {
+    background: linear-gradient(180deg, #8b4513, #654321);
+    border-radius: 5px;
+}
+
+.furniture-table {
+    background: linear-gradient(180deg, #5c4033, #3e2723);
+    border-radius: 3px;
+}
+
+.furniture-wardrobe {
+    background: linear-gradient(180deg, #4a3728, #2d1f14);
+    border: 3px solid #1a1209;
+}
+
+.furniture-fridge {
+    background: linear-gradient(180deg, #e0e0e0, #b0b0b0);
+    border: 2px solid #808080;
+}
+
+.furniture-bed {
+    background: linear-gradient(180deg, #8b4513, #654321);
+    border-radius: 5px;
+}
+
+.furniture-box {
+    background: linear-gradient(180deg, #5c4033, #3e2723);
+    border: 2px solid #2d1f14;
+}
+
+.furniture.hide-spot {
+    cursor: pointer;
+}
+
+.furniture.hide-spot:hover {
+    box-shadow: 0 0 10px rgba(74,222,128,0.5);
+}
+
+/* Bulmacalar */
+.puzzle {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    filter: drop-shadow(0 0 5px rgba(251,191,36,0.5));
+}
+
+.puzzle:hover {
+    transform: scale(1.2);
+}
+
+.puzzle.solved {
+    opacity: 0.5;
+    filter: grayscale(1);
+}
+
+/* Anahtarlar */
+.key-item {
+    position: absolute;
+    font-size: 28px;
+    cursor: pointer;
+    animation: float 2s infinite;
+    filter: drop-shadow(0 0 8px rgba(251,191,36,0.8));
+}
+
+.key-item:hover {
+    transform: scale(1.3);
+}
+
+.key-item.collected {
+    display: none;
+}
+
+/* Kapılar */
+.door {
+    position: absolute;
+    background: linear-gradient(180deg, #5c4033, #3e2723);
+    border: 3px solid #2d1f14;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: all 0.2s;
+}
+
+.door:hover {
+    box-shadow: 0 0 15px rgba(251,191,36,0.5);
+}
+
+.door.exit-door {
+    background: linear-gradient(180deg, #166534, #14532d);
+    border-color: #4ade80;
+}
+
+.door.exit-door.locked {
+    background: linear-gradient(180deg, #991b1b, #7f1d1d);
+    border-color: #ef4444;
+}
+
+.door-side {
+    width: 20px;
+    height: 60px;
+}
+
+.door-top, .door-bottom {
+    width: 60px;
+    height: 20px;
+}
+
+/* Animasyonlar */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}

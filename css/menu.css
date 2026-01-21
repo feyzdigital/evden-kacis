@@ -1,0 +1,107 @@
+/**
+ * MENÜ STİLLERİ
+ */
+
+#menu-screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%);
+    padding: 20px;
+}
+
+.game-title {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 32px;
+    color: #ef4444;
+    text-shadow: 4px 4px 0 #000, 0 0 20px rgba(239,68,68,0.5);
+    margin-bottom: 10px;
+    animation: glow 2s infinite;
+}
+
+.game-subtitle {
+    font-size: 24px;
+    color: #fbbf24;
+    margin-bottom: 5px;
+}
+
+.game-desc {
+    font-size: 18px;
+    color: #94a3b8;
+    margin-bottom: 20px;
+}
+
+.character-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.character-card {
+    width: 120px;
+    padding: 15px 10px;
+    background: linear-gradient(180deg, #1e293b, #0f172a);
+    border: 3px solid #334155;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.character-card:hover {
+    transform: translateY(-5px);
+    border-color: #3b82f6;
+}
+
+.character-card.selected {
+    border-color: #4ade80;
+    box-shadow: 0 0 15px rgba(74,222,128,0.3);
+}
+
+.character-sprite {
+    width: 48px;
+    height: 72px;
+    margin: 0 auto 10px;
+}
+
+.character-name {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 8px;
+    color: #e2e8f0;
+    margin-bottom: 5px;
+}
+
+.character-stats {
+    font-size: 14px;
+    color: #94a3b8;
+}
+
+.character-desc {
+    font-size: 12px;
+    color: #fbbf24;
+    margin-top: 5px;
+}
+
+.start-btn {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 14px;
+    padding: 15px 40px;
+    background: linear-gradient(180deg, #4ade80, #166534);
+    border: 4px solid #166534;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.start-btn:hover:not(:disabled) {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(74,222,128,0.5);
+}
+
+.start-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

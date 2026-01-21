@@ -1,0 +1,146 @@
+/**
+ * KARAKTER STİLLERİ
+ */
+
+/* OYUNCU */
+.player {
+    position: absolute;
+    width: 40px;
+    height: 62px;
+    z-index: 50;
+    transition: opacity 0.3s;
+}
+
+.player.hidden {
+    opacity: 0.3;
+}
+
+.player-sprite {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, #60a5fa 0%, #3b82f6 30%, #1e40af 100%);
+    border-radius: 50% 50% 40% 40%;
+    position: relative;
+}
+
+.player-sprite::before {
+    content: '😊';
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 20px;
+}
+
+/* Karakter Renkleri */
+.player.warrior .player-sprite {
+    background: linear-gradient(180deg, #ef4444 0%, #dc2626 30%, #991b1b 100%);
+}
+
+.player.warrior .player-sprite::before {
+    content: '⚔️';
+}
+
+.player.ninja .player-sprite {
+    background: linear-gradient(180deg, #1f2937 0%, #111827 30%, #030712 100%);
+}
+
+.player.ninja .player-sprite::before {
+    content: '🥷';
+}
+
+.player.mage .player-sprite {
+    background: linear-gradient(180deg, #a855f7 0%, #9333ea 30%, #6b21a8 100%);
+}
+
+.player.mage .player-sprite::before {
+    content: '🧙';
+}
+
+.player.scout .player-sprite {
+    background: linear-gradient(180deg, #22c55e 0%, #16a34a 30%, #15803d 100%);
+}
+
+.player.scout .player-sprite::before {
+    content: '🏃';
+}
+
+/* DEDE */
+.grandpa {
+    position: absolute;
+    width: 46px;
+    height: 70px;
+    z-index: 45;
+    display: none;
+}
+
+.grandpa.visible {
+    display: block;
+}
+
+.grandpa-sprite {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, #78716c 0%, #57534e 30%, #44403c 100%);
+    border-radius: 50% 50% 40% 40%;
+    position: relative;
+}
+
+.grandpa-sprite::before {
+    content: '👴';
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 24px;
+}
+
+.grandpa.angry .grandpa-sprite {
+    background: linear-gradient(180deg, #ef4444 0%, #dc2626 30%, #991b1b 100%);
+}
+
+.grandpa.angry .grandpa-sprite::before {
+    content: '😠';
+}
+
+.danger-indicator {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 20px;
+    animation: pulse 0.5s infinite;
+    display: none;
+}
+
+.grandpa.angry .danger-indicator {
+    display: block;
+}
+
+.speech-bubble {
+    position: absolute;
+    top: -45px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    color: #1a1a2e;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    white-space: nowrap;
+    display: none;
+}
+
+.speech-bubble.active {
+    display: block;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+@keyframes glow {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.2); }
+}
