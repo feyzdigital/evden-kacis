@@ -69,6 +69,7 @@ const RoomManager = {
                 const puzzleEl = document.createElement('div');
                 puzzleEl.className = 'puzzle';
                 puzzleEl.dataset.puzzleId = puzzle.id;
+                puzzleEl.dataset.roomId = roomId;
                 puzzleEl.style.cssText = `left:${puzzle.x}px;top:${puzzle.y}px;`;
                 
                 const icons = {
@@ -79,6 +80,13 @@ const RoomManager = {
                 };
                 puzzleEl.textContent = icons[puzzle.type] || '❓';
                 
+                // Tıklama olayı
+                puzzleEl.addEventListener('click', () => this.onPuzzleClick(puzzle.id, roomId));
+                puzzleEl.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    this.onPuzzleClick(puzzle.id, roomId);
+                });
+                
                 this.puzzleElements[puzzle.id] = puzzleEl;
                 roomEl.appendChild(puzzleEl);
             }
@@ -88,8 +96,16 @@ const RoomManager = {
                 const keyEl = document.createElement('div');
                 keyEl.className = 'key-item';
                 keyEl.dataset.keyId = key.id;
+                keyEl.dataset.roomId = roomId;
                 keyEl.style.cssText = `left:${key.x}px;top:${key.y}px;`;
                 keyEl.textContent = '🔑';
+                
+                // Tıklama olayı
+                keyEl.addEventListener('click', () => this.onKeyClick(key, roomId));
+                keyEl.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    this.onKeyClick(key, roomId);
+                });
                 
                 this.keyElements[key.id] = keyEl;
                 roomEl.appendChild(keyEl);
@@ -103,8 +119,17 @@ const RoomManager = {
                     doorEl.className = 'door exit-door locked';
                     doorEl.dataset.to = 'exit';
                     doorEl.dataset.isExit = 'true';
+                    doorEl.dataset.direction = door.direction;
                     doorEl.style.cssText = this.getDoorStyle(door);
                     doorEl.innerHTML = '🚪<span class="door-label">ÇIKIŞ</span>';
+                    
+                    // Tıklama olayı
+                    doorEl.addEventListener('click', () => this.onDoorClick(door, roomId));
+                    doorEl.addEventListener('touchend', (e) => {
+                        e.preventDefault();
+                        this.onDoorClick(door, roomId);
+                    });
+                    
                     roomEl.appendChild(doorEl);
                 } else {
                     // Normal kapı
@@ -122,6 +147,14 @@ const RoomManager = {
                         bottom: '▼'
                     };
                     doorEl.innerHTML = `${arrows[door.direction] || '➡️'}<span class="door-label">${ROOMS[door.to]?.name || ''}</span>`;
+                    
+                    // Tıklama olayı
+                    doorEl.addEventListener('click', () => this.onDoorClick(door, roomId));
+                    doorEl.addEventListener('touchend', (e) => {
+                        e.preventDefault();
+                        this.onDoorClick(door, roomId);
+                    });
+                    
                     roomEl.appendChild(doorEl);
                 }
             }
@@ -144,6 +177,47 @@ const RoomManager = {
             return `left:${door.x}px;bottom:0;width:70px;height:25px;`;
         }
         return '';
+    },
+    
+    onDoorClick(door, fromRoomId) {
+        // Sadece aktif odadaki kapılara tepki ver
+        if (fromRoomId !== this.currentRoom) return;
+        
+        // Oyuncu kapıya yeterince yakın mı?
+        const nearbyDoor = this.findNearbyDoor(Player.x, Player.y, fromRoomId);
+        if (nearbyDoor && nearbyDoor.to === door.to) {
+            Game.useDoor(door);
+        } else {
+            UI.showMessage('Kapıya yaklaş!', 1000);
+        }
+    },
+    
+    onPuzzleClick(puzzleId, roomId) {
+        // Sadece aktif odadaki bulmacalara tepki ver
+        if (roomId !== this.currentRoom) return;
+        if (Game.state.isPuzzleOpen || Game.state.isHiding) return;
+        
+        // Oyuncu bulmacaya yeterince yakın mı?
+        const nearbyPuzzle = this.findNearbyPuzzle(Player.x, Player.y, roomId);
+        if (nearbyPuzzle === puzzleId) {
+            Game.openPuzzle(puzzleId);
+        } else {
+            UI.showMessage('Bulmacaya yaklaş!', 1000);
+        }
+    },
+    
+    onKeyClick(key, roomId) {
+        // Sadece aktif odadaki anahtarlara tepki ver
+        if (roomId !== this.currentRoom) return;
+        if (Game.state.collectedKeys.includes(key.id)) return;
+        
+        // Oyuncu anahtara yeterince yakın mı?
+        const nearbyKey = this.findNearbyKey(Player.x, Player.y, roomId);
+        if (nearbyKey && nearbyKey.id === key.id) {
+            Game.collectKey(key);
+        } else {
+            UI.showMessage('Anahtara yaklaş!', 1000);
+        }
     },
     
     showRoom(roomId) {

@@ -20,7 +20,7 @@ const Grandpa = {
     init() {
         this.x = CONFIG.GRANDPA.START_X;
         this.y = CONFIG.GRANDPA.START_Y;
-        this.currentRoom = 'oturma';
+        this.currentRoom = 'mutfak'; // Oyuncu oturma odasında başladığı için dede mutfakta başlasın
         this.isAngry = false;
         this.patrolIndex = 0;
         this.roomChangeDelay = CONFIG.GRANDPA.ROOM_CHANGE_MIN_DELAY;
@@ -65,9 +65,9 @@ const Grandpa = {
             this.y += (dy / dist) * speed;
         }
         
-        // Sınırlar
+        // Sınırlar - oyuncu ile tutarlı olmalı
         this.x = Utils.clamp(this.x, 10, CONFIG.CANVAS_WIDTH - this.width - 10);
-        this.y = Utils.clamp(this.y, 80, CONFIG.CANVAS_HEIGHT - this.height);
+        this.y = Utils.clamp(this.y, 70, CONFIG.CANVAS_HEIGHT - this.height - 10);
         
         // Konuşma şansı
         if (Math.random() < 0.005) {
@@ -185,7 +185,7 @@ const Grandpa = {
     reset() {
         this.x = CONFIG.GRANDPA.START_X;
         this.y = CONFIG.GRANDPA.START_Y;
-        this.currentRoom = 'oturma';
+        this.currentRoom = 'mutfak'; // Oyuncu oturma odasında başladığı için dede mutfakta başlasın
         this.isAngry = false;
         this.patrolIndex = 0;
         this.roomChangeDelay = CONFIG.GRANDPA.ROOM_CHANGE_MIN_DELAY;

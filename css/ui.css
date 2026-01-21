@@ -248,36 +248,37 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 140px;
-    background: rgba(15,15,26,0.9);
+    height: 150px;
+    background: rgba(15,15,26,0.95);
     border-top: 2px solid #334155;
     z-index: 90;
-    padding: 10px;
+    padding: 15px;
 }
 
 #mobile-controls.active { display: flex; justify-content: space-between; align-items: center; }
 
 /* Joystick */
 #joystick-area {
-    width: 100px;
-    height: 100px;
+    width: 110px;
+    height: 110px;
     background: rgba(51,65,85,0.5);
     border-radius: 50%;
     border: 3px solid #475569;
     position: relative;
     touch-action: none;
+    margin-left: 10px;
 }
 
 #joystick-knob {
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     background: linear-gradient(180deg, #4ade80, #166534);
     border-radius: 50%;
     position: absolute;
     top: 50%;
     left: 50%;
-    margin-left: -20px;
-    margin-top: -20px;
+    margin-left: -22.5px;
+    margin-top: -22.5px;
     transition: transform 0.05s;
     border: 2px solid #22c55e;
 }
@@ -290,16 +291,17 @@
 }
 
 .action-btn {
-    width: 60px;
-    height: 60px;
+    width: 65px;
+    height: 65px;
     border-radius: 50%;
     border: 3px solid;
-    font-size: 20px;
+    font-size: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
 }
 
 #btn-interact {
@@ -324,8 +326,9 @@
 }
 
 @media (max-width: 600px) {
-    #game-canvas { bottom: 140px; }
-    .mini-map { bottom: 150px; }
+    #game-canvas { bottom: 150px; }
+    .mini-map { bottom: 160px; }
     .bar-container { width: 50px; }
     .room-name { font-size: 7px; }
+    .controls-info { display: none; }
 }

@@ -210,10 +210,10 @@ const ROOMS = {
 
 // Kapı giriş pozisyonları - Düzeltilmiş
 const DOOR_ENTRY_POSITIONS = {
-    left: { x: 60, y: 240 },
-    right: { x: 700, y: 240 },
-    top: { x: 380, y: 100 },
-    bottom: { x: 380, y: 360 }
+    left: { x: 70, y: 240 },
+    right: { x: 690, y: 240 },
+    top: { x: 380, y: 120 },
+    bottom: { x: 380, y: 350 }
 };
 
 // Bulmaca tanımları
@@ -230,10 +230,13 @@ const PUZZLES = {
     },
     clock1: {
         id: 'clock1',
-        type: 'observe',
+        type: 'riddle',
         title: '🕰️ ANTİKA SAAT',
-        content: 'Saat 7:25 gösteriyor.<br><br>Altında kazınmış "725" yazısı var.<br><br>Bu önemli olabilir!',
-        reward: 'info'
+        content: 'Saat 7:25 gösteriyor.<br><br>Altında kazınmış yazılar var...<br><br>"İkinci rakam kaç?"',
+        answer: '2',
+        hint: 'Saatin gösterdiği zaman: 7:25, ortadaki rakam?',
+        reward: 'clue',
+        clueText: 'İpucu 2: Şifrenin ikinci rakamı 2'
     },
     book1: {
         id: 'book1',
@@ -241,27 +244,24 @@ const PUZZLES = {
         title: '📖 ESKİ KİTAP',
         content: 'Kitabın sayfaları arasında bir not:<br><br>"İlk rakam: Haftanın ortası kaçıncı gün?"',
         answer: '4',
-        hint: 'Pazartesi 1, Salı 2, Çarşamba 3...',
+        hint: 'Pazartesi 1, Salı 2, Çarşamba 3, Perşembe...',
         reward: 'clue',
-        clueText: 'İpucu 2: Şifrenin ilk rakamı 4'
+        clueText: 'İpucu 3: Şifrenin ilk rakamı 4'
     },
     painting2: {
         id: 'painting2',
-        type: 'riddle',
+        type: 'observe',
         title: '🖼️ AİLE PORTRESİ',
-        content: 'Çerçevenin arkasında yazıyor:<br><br>"2 ve 2 yan yana gelirse?"',
-        answer: '22',
-        hint: 'Matematik değil, yan yana yaz...',
-        reward: 'clue',
-        clueText: 'İpucu 3: Son iki rakam 25'
+        content: 'Çerçevenin arkasında yazıyor:<br><br>"Dedenin doğum yılının son rakamı: 5"<br><br>Bu önemli bir bilgi olabilir!',
+        reward: 'info'
     },
     safe1: {
         id: 'safe1',
         type: 'code',
         title: '🔐 ÇELİK KASA',
-        content: '3 haneli şifreyi girin:',
+        content: '3 haneli şifreyi girin:<br><br><small>İpuçlarını hatırla!</small>',
         answer: '425',
-        hint: 'Tüm ipuçlarını topladın mı? 4-2-5',
+        hint: 'İpuçları: İlk rakam 4, ikinci rakam 2, son rakam 5',
         reward: 'key'
     }
 };

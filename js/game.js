@@ -54,6 +54,9 @@ const Game = {
         UI.updateRoomName(ROOMS.oturma.name);
         UI.updateMinimap(this.state.currentRoom, this.state.visitedRooms, Grandpa.currentRoom);
         
+        // İlk mesaj
+        UI.showMessage('🏠 Evden kaç! Anahtarları ve ipuçlarını bul!', 3000);
+        
         this.state.startTime = Date.now();
         this.state.isRunning = true;
         this.gameLoop();
@@ -131,6 +134,16 @@ const Game = {
             
             const nearbyDoor = RoomManager.findNearbyDoor(Player.x, Player.y, this.state.currentRoom);
             if (nearbyDoor) { this.useDoor(nearbyDoor); return; }
+            
+            // Yakında saklanma yeri var mı?
+            const nearbyHideSpot = RoomManager.findNearbyHideSpot(Player.x, Player.y, this.state.currentRoom);
+            if (nearbyHideSpot) {
+                UI.showMessage('💡 Saklanmak için SPACE tuşuna bas!', 1200);
+                return;
+            }
+            
+            // Hiçbir şey yoksa
+            UI.showMessage('Yakında etkileşim yapılacak bir şey yok', 1000);
         }
     },
     

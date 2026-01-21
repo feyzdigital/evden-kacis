@@ -116,7 +116,7 @@ const PuzzleSystem = {
                 UI.showMessage(`📜 ${puzzle.clueText}`, 3000);
                 break;
             case 'key':
-                Game.addKey('key-safe');
+                Game.addKey('key3'); // Kasadan çıkan 3. anahtar
                 UI.showMessage('🔑 Kasadan anahtar aldın!', 2000);
                 break;
             case 'info':

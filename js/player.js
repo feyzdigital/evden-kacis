@@ -62,10 +62,10 @@ const Player = {
         const newX = this.x + dx;
         const newY = this.y + dy;
         
-        // Sınır kontrolü
-        const minY = 80;
+        // Sınır kontrolü - HUD 40px + biraz boşluk
+        const minY = 70;
         const maxX = CONFIG.CANVAS_WIDTH - this.width - 10;
-        const maxY = CONFIG.CANVAS_HEIGHT - this.height;
+        const maxY = CONFIG.CANVAS_HEIGHT - this.height - 10;
         
         // Mobilya çarpışma kontrolü
         const room = ROOMS[gameState.currentRoom];
