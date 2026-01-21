@@ -8,7 +8,7 @@ const Grandpa = {
     width: CONFIG.GRANDPA.WIDTH,
     height: CONFIG.GRANDPA.HEIGHT,
     speed: CONFIG.GRANDPA.BASE_SPEED,
-    currentRoom: 'salon',
+    currentRoom: 'oturma',
     isAngry: false,
     patrolIndex: 0,
     roomChangeDelay: 0,
@@ -20,7 +20,7 @@ const Grandpa = {
     init() {
         this.x = CONFIG.GRANDPA.START_X;
         this.y = CONFIG.GRANDPA.START_Y;
-        this.currentRoom = 'salon';
+        this.currentRoom = 'oturma';
         this.isAngry = false;
         this.patrolIndex = 0;
         this.roomChangeDelay = CONFIG.GRANDPA.ROOM_CHANGE_MIN_DELAY;
@@ -66,8 +66,8 @@ const Grandpa = {
         }
         
         // Sınırlar
-        this.x = Utils.clamp(this.x, 0, CONFIG.CANVAS_WIDTH - this.width);
-        this.y = Utils.clamp(this.y, 60, CONFIG.CANVAS_HEIGHT - this.height + 40);
+        this.x = Utils.clamp(this.x, 10, CONFIG.CANVAS_WIDTH - this.width - 10);
+        this.y = Utils.clamp(this.y, 80, CONFIG.CANVAS_HEIGHT - this.height);
         
         // Konuşma şansı
         if (Math.random() < 0.005) {
@@ -78,6 +78,8 @@ const Grandpa = {
     patrol(gameState) {
         this.isAngry = false;
         const room = ROOMS[this.currentRoom];
+        if (!room || !room.patrol || room.patrol.length === 0) return;
+        
         const target = room.patrol[this.patrolIndex];
         
         // Hedefe doğru hareket
@@ -97,10 +99,10 @@ const Grandpa = {
     tryChangeRoom(gameState) {
         // Oyuncu koşuyorsa sesi duy
         if (Player.isRunning && gameState.currentRoom !== this.currentRoom) {
-            const playerRoom = ROOMS[gameState.currentRoom];
-            // Oyuncunun odasına git
-            for (const door of ROOMS[this.currentRoom].doors) {
-                if (door.to === gameState.currentRoom) {
+            // Komşu oda mı kontrol et
+            const currentRoomData = ROOMS[this.currentRoom];
+            for (const door of currentRoomData.doors) {
+                if (door.to === gameState.currentRoom && !door.isExit) {
                     this.changeRoom(gameState.currentRoom);
                     return;
                 }
@@ -121,26 +123,32 @@ const Grandpa = {
     },
     
     changeRoom(roomId) {
+        if (!ROOMS[roomId]) return;
+        
         this.currentRoom = roomId;
         this.patrolIndex = 0;
         
         // Odanın ilk patrol noktasına git
         const room = ROOMS[roomId];
-        this.x = room.patrol[0].x;
-        this.y = room.patrol[0].y;
+        if (room.patrol && room.patrol.length > 0) {
+            this.x = room.patrol[0].x;
+            this.y = room.patrol[0].y;
+        }
     },
     
     speak() {
         const speech = GRANDPA_SPEECHES[Utils.random(0, GRANDPA_SPEECHES.length - 1)];
-        this.speechElement.textContent = speech;
-        this.speechElement.classList.add('active');
-        this.speechTimer = 120; // 2 saniye
+        if (this.speechElement) {
+            this.speechElement.textContent = speech;
+            this.speechElement.classList.add('active');
+        }
+        this.speechTimer = 120;
     },
     
     updateSpeech() {
         if (this.speechTimer > 0) {
             this.speechTimer--;
-            if (this.speechTimer <= 0) {
+            if (this.speechTimer <= 0 && this.speechElement) {
                 this.speechElement.classList.remove('active');
             }
         }
@@ -177,12 +185,14 @@ const Grandpa = {
     reset() {
         this.x = CONFIG.GRANDPA.START_X;
         this.y = CONFIG.GRANDPA.START_Y;
-        this.currentRoom = 'salon';
+        this.currentRoom = 'oturma';
         this.isAngry = false;
         this.patrolIndex = 0;
         this.roomChangeDelay = CONFIG.GRANDPA.ROOM_CHANGE_MIN_DELAY;
         this.speechTimer = 0;
-        this.speechElement.classList.remove('active');
+        if (this.speechElement) {
+            this.speechElement.classList.remove('active');
+        }
         this.updatePosition();
         this.updateVisuals();
     }

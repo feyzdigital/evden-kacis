@@ -2,9 +2,10 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>Dede'den Kaçış</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/menu.css">
     <link rel="stylesheet" href="css/game.css">
@@ -17,11 +18,9 @@
         <div id="menu-screen">
             <h1 class="game-title">DEDE'DEN KAÇIŞ</h1>
             <p class="game-subtitle">🏠 Bulmaca • Saklan • Kaç! 🏃</p>
-            <p class="game-desc">Karakterini seç ve esrarengiz evden kaç!</p>
+            <p class="game-desc">Karakterini seç ve evden kaç!</p>
             
-            <div class="character-grid" id="character-grid">
-                <!-- Karakterler JS ile yüklenecek -->
-            </div>
+            <div class="character-grid" id="character-grid"></div>
             
             <button class="start-btn" id="start-btn" disabled>OYUNU BAŞLAT</button>
         </div>
@@ -29,7 +28,7 @@
         <!-- Oyun Ekranı -->
         <div id="game-screen">
             <!-- HUD -->
-            <div class="game-hud" id="game-hud">
+            <div class="game-hud">
                 <div class="hud-left">
                     <div class="stat-display">
                         <span>❤️</span>
@@ -45,35 +44,29 @@
                     </div>
                 </div>
                 <div class="hud-center">
-                    <span class="room-name" id="room-name">SALON</span>
+                    <span class="room-name" id="room-name">OTURMA ODASI</span>
                 </div>
                 <div class="hud-right">
-                    <div class="inv-item">🔑 <span id="key-count">0</span>/2</div>
-                    <div class="inv-item">📜 <span id="clue-count">0</span>/3</div>
+                    <div class="inv-item">🔑<span id="key-count">0</span>/2</div>
+                    <div class="inv-item">📜<span id="clue-count">0</span>/3</div>
                 </div>
             </div>
             
             <!-- Oyun Alanı -->
             <div id="game-canvas">
-                <!-- Odalar -->
                 <div id="rooms-container"></div>
                 
-                <!-- Oyuncu -->
                 <div class="player" id="player">
                     <div class="player-sprite"></div>
                 </div>
                 
-                <!-- Dede -->
                 <div class="grandpa" id="grandpa">
                     <div class="grandpa-sprite"></div>
                     <div class="danger-indicator">⚠️</div>
                     <div class="speech-bubble" id="grandpa-speech"></div>
                 </div>
                 
-                <!-- Mini Harita -->
                 <div class="mini-map" id="mini-map"></div>
-                
-                <!-- Mesaj Popup -->
                 <div class="message-popup" id="message-popup"></div>
                 
                 <!-- Bulmaca Modal -->
@@ -95,12 +88,12 @@
                         <div class="peephole">
                             <span id="peephole-content">...</span>
                         </div>
-                        <button class="btn btn-danger" onclick="Game.exitHiding()">ÇIKIŞ (SPACE)</button>
+                        <button class="btn btn-danger" onclick="Game.exitHiding()">ÇIKIŞ</button>
                         <p class="hide-warning" id="hide-warning">⚠️ DEDE YAKINLARDA!</p>
                     </div>
                 </div>
                 
-                <!-- Oyun Sonu Ekranları -->
+                <!-- Oyun Sonu -->
                 <div class="modal game-over-modal" id="game-over">
                     <div class="modal-content">
                         <h1 class="title-lose">YAKALANDIN!</h1>
@@ -120,17 +113,28 @@
                 </div>
             </div>
             
-            <!-- Kontrol Bilgisi -->
+            <!-- Masaüstü Kontrol Bilgisi -->
             <div class="controls-info">
                 <span><kbd>WASD</kbd> Hareket</span>
                 <span><kbd>E</kbd> Etkileşim</span>
                 <span><kbd>SHIFT</kbd> Koş</span>
                 <span><kbd>SPACE</kbd> Saklan</span>
             </div>
+            
+            <!-- Mobil Kontroller -->
+            <div id="mobile-controls">
+                <div id="joystick-area">
+                    <div id="joystick-knob"></div>
+                </div>
+                <div class="action-buttons">
+                    <div class="action-btn" id="btn-interact">🔍</div>
+                    <div class="action-btn" id="btn-hide">📦</div>
+                    <div class="action-btn" id="btn-run">🏃</div>
+                </div>
+            </div>
         </div>
     </div>
     
-    <!-- JavaScript Modülleri -->
     <script src="js/config.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/input.js"></script>
@@ -141,10 +145,7 @@
     <script src="js/ui.js"></script>
     <script src="js/game.js"></script>
     <script>
-        // Oyunu başlat
-        document.addEventListener('DOMContentLoaded', () => {
-            Game.init();
-        });
+        document.addEventListener('DOMContentLoaded', () => Game.init());
     </script>
 </body>
 </html>

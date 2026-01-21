@@ -31,27 +31,34 @@ const PuzzleSystem = {
         
         if (puzzle.type === 'riddle' || puzzle.type === 'code') {
             // Cevap giriş alanı
+            const inputWrapper = document.createElement('div');
+            inputWrapper.className = 'puzzle-input-wrapper';
+            
             const input = document.createElement('input');
             input.type = 'text';
             input.id = 'puzzle-answer';
             input.placeholder = 'Cevabını yaz...';
-            input.style.cssText = 'width:200px;padding:10px;font-size:18px;text-align:center;background:#1e293b;border:2px solid #334155;color:#e2e8f0;font-family:VT323,monospace;';
+            input.className = 'puzzle-input';
+            input.inputMode = 'numeric'; // Mobilde sayı klavyesi
+            
+            const btnWrapper = document.createElement('div');
+            btnWrapper.className = 'puzzle-buttons';
             
             const submitBtn = document.createElement('button');
             submitBtn.className = 'btn btn-primary';
-            submitBtn.textContent = 'CEVAPLA';
-            submitBtn.style.marginLeft = '10px';
+            submitBtn.textContent = '✓ CEVAPLA';
             submitBtn.onclick = () => this.checkAnswer();
             
             const hintBtn = document.createElement('button');
             hintBtn.className = 'btn btn-secondary';
-            hintBtn.textContent = 'İPUCU';
-            hintBtn.style.marginLeft = '10px';
+            hintBtn.textContent = '💡 İPUCU';
             hintBtn.onclick = () => this.showHint();
             
-            interactiveArea.appendChild(input);
-            interactiveArea.appendChild(submitBtn);
-            interactiveArea.appendChild(hintBtn);
+            inputWrapper.appendChild(input);
+            btnWrapper.appendChild(submitBtn);
+            btnWrapper.appendChild(hintBtn);
+            interactiveArea.appendChild(inputWrapper);
+            interactiveArea.appendChild(btnWrapper);
             
             // Enter ile cevaplama
             input.addEventListener('keypress', (e) => {
@@ -65,7 +72,7 @@ const PuzzleSystem = {
             // Sadece gözlem - kapat butonu yeterli
             const okBtn = document.createElement('button');
             okBtn.className = 'btn btn-primary';
-            okBtn.textContent = 'ANLADIM';
+            okBtn.textContent = '✓ ANLADIM';
             okBtn.onclick = () => Game.closePuzzle();
             interactiveArea.appendChild(okBtn);
         }
@@ -92,7 +99,7 @@ const PuzzleSystem = {
             RoomManager.markPuzzleSolved(this.currentPuzzle.id);
             
             // Modalı kapat
-            setTimeout(() => Game.closePuzzle(), 1000);
+            setTimeout(() => Game.closePuzzle(), 1200);
             
         } else {
             // Yanlış cevap

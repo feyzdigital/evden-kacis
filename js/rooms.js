@@ -3,17 +3,17 @@
  */
 
 const RoomManager = {
-    currentRoom: 'salon',
+    currentRoom: 'oturma',
     roomElements: {},
     keyElements: {},
     puzzleElements: {},
     exitUnlocked: false,
     
     init() {
-        this.currentRoom = 'salon';
+        this.currentRoom = 'oturma';
         this.exitUnlocked = false;
         this.createRooms();
-        this.showRoom('salon');
+        this.showRoom('oturma');
     },
     
     createRooms() {
@@ -28,6 +28,12 @@ const RoomManager = {
             const roomEl = document.createElement('div');
             roomEl.id = `room-${roomId}`;
             roomEl.className = `room ${room.className}`;
+            
+            // Oda ismi etiketi
+            const roomLabel = document.createElement('div');
+            roomLabel.className = 'room-label';
+            roomLabel.textContent = room.name;
+            roomEl.appendChild(roomLabel);
             
             // Mobilyalar
             for (const furniture of room.furniture) {
@@ -46,7 +52,12 @@ const RoomManager = {
                     wardrobe: '🚪',
                     fridge: '🧊',
                     bed: '🛏️',
-                    box: '📦'
+                    box: '📦',
+                    bigbox: '📦',
+                    tv: '📺',
+                    counter: '🍳',
+                    desk: '🖥️',
+                    barrel: '🛢️'
                 };
                 furnitureEl.textContent = icons[furniture.type] || '';
                 
@@ -86,35 +97,53 @@ const RoomManager = {
             
             // Kapılar
             for (const door of room.doors) {
-                const doorEl = document.createElement('div');
-                doorEl.className = 'door';
-                if (door.isExit) {
-                    doorEl.classList.add('exit-door', 'locked');
-                }
-                doorEl.dataset.to = door.to;
-                
-                // Kapı pozisyonu ve boyutu
-                if (door.x === 0) {
-                    doorEl.classList.add('door-side');
-                    doorEl.style.cssText = `left:0;top:${door.y}px;`;
-                } else if (door.x >= 730) {
-                    doorEl.classList.add('door-side');
-                    doorEl.style.cssText = `right:0;top:${door.y}px;`;
-                } else if (door.y === 0) {
-                    doorEl.classList.add('door-top');
-                    doorEl.style.cssText = `left:${door.x}px;top:0;`;
+                if (door.to === 'exit' && door.isExit) {
+                    // Çıkış kapısı
+                    const doorEl = document.createElement('div');
+                    doorEl.className = 'door exit-door locked';
+                    doorEl.dataset.to = 'exit';
+                    doorEl.dataset.isExit = 'true';
+                    doorEl.style.cssText = this.getDoorStyle(door);
+                    doorEl.innerHTML = '🚪<span class="door-label">ÇIKIŞ</span>';
+                    roomEl.appendChild(doorEl);
                 } else {
-                    doorEl.classList.add('door-bottom');
-                    doorEl.style.cssText = `left:${door.x}px;bottom:0;`;
+                    // Normal kapı
+                    const doorEl = document.createElement('div');
+                    doorEl.className = 'door';
+                    doorEl.dataset.to = door.to;
+                    doorEl.dataset.direction = door.direction;
+                    doorEl.style.cssText = this.getDoorStyle(door);
+                    
+                    // Kapı yönünü gösteren ok
+                    const arrows = {
+                        left: '◀',
+                        right: '▶',
+                        top: '▲',
+                        bottom: '▼'
+                    };
+                    doorEl.innerHTML = `${arrows[door.direction] || '➡️'}<span class="door-label">${ROOMS[door.to]?.name || ''}</span>`;
+                    roomEl.appendChild(doorEl);
                 }
-                
-                doorEl.textContent = door.isExit ? '🚪' : '➡️';
-                roomEl.appendChild(doorEl);
             }
             
             this.roomElements[roomId] = roomEl;
             container.appendChild(roomEl);
         }
+    },
+    
+    getDoorStyle(door) {
+        const direction = door.direction;
+        
+        if (direction === 'left') {
+            return `left:0;top:${door.y}px;width:25px;height:70px;`;
+        } else if (direction === 'right') {
+            return `right:0;top:${door.y}px;width:25px;height:70px;`;
+        } else if (direction === 'top') {
+            return `left:${door.x}px;top:60px;width:70px;height:25px;`;
+        } else if (direction === 'bottom') {
+            return `left:${door.x}px;bottom:0;width:70px;height:25px;`;
+        }
+        return '';
     },
     
     showRoom(roomId) {
@@ -124,17 +153,27 @@ const RoomManager = {
         }
         
         // Seçili odayı göster
-        this.roomElements[roomId].classList.add('active');
+        if (this.roomElements[roomId]) {
+            this.roomElements[roomId].classList.add('active');
+        }
         this.currentRoom = roomId;
         
         // Oda adını güncelle
         UI.updateRoomName(ROOMS[roomId].name);
     },
     
-    changeRoom(roomId, entryPos) {
+    changeRoom(roomId, direction) {
         this.showRoom(roomId);
         
-        // Oyuncuyu giriş pozisyonuna taşı
+        // Oyuncuyu karşı tarafa yerleştir
+        const oppositePositions = {
+            left: 'right',
+            right: 'left',
+            top: 'bottom',
+            bottom: 'top'
+        };
+        
+        const entryPos = oppositePositions[direction];
         if (entryPos && DOOR_ENTRY_POSITIONS[entryPos]) {
             const pos = DOOR_ENTRY_POSITIONS[entryPos];
             Player.setPosition(pos.x, pos.y);
@@ -145,22 +184,30 @@ const RoomManager = {
     
     findNearbyDoor(x, y, roomId) {
         const room = ROOMS[roomId];
-        const playerCenter = { x: x + Player.width / 2, y: y + Player.height / 2 };
+        if (!room) return null;
+        
+        const playerCenterX = x + Player.width / 2;
+        const playerCenterY = y + Player.height / 2;
         
         for (const door of room.doors) {
-            let doorCenter;
-            if (door.x === 0) {
-                doorCenter = { x: 10, y: door.y + 30 };
-            } else if (door.x >= 730) {
-                doorCenter = { x: 790, y: door.y + 30 };
-            } else if (door.y === 0) {
-                doorCenter = { x: door.x + 30, y: 10 };
-            } else {
-                doorCenter = { x: door.x + 30, y: 430 };
+            let doorCenterX, doorCenterY;
+            
+            if (door.direction === 'left') {
+                doorCenterX = 12;
+                doorCenterY = door.y + 35;
+            } else if (door.direction === 'right') {
+                doorCenterX = CONFIG.CANVAS_WIDTH - 12;
+                doorCenterY = door.y + 35;
+            } else if (door.direction === 'top') {
+                doorCenterX = door.x + 35;
+                doorCenterY = 72;
+            } else if (door.direction === 'bottom') {
+                doorCenterX = door.x + 35;
+                doorCenterY = CONFIG.CANVAS_HEIGHT - 12;
             }
             
-            const dist = Utils.distance(playerCenter.x, playerCenter.y, doorCenter.x, doorCenter.y);
-            if (dist < 60) {
+            const dist = Utils.distance(playerCenterX, playerCenterY, doorCenterX, doorCenterY);
+            if (dist < 70) {
                 return door;
             }
         }
@@ -169,11 +216,14 @@ const RoomManager = {
     
     findNearbyKey(x, y, roomId) {
         const room = ROOMS[roomId];
-        const playerCenter = { x: x + Player.width / 2, y: y + Player.height / 2 };
+        if (!room) return null;
+        
+        const playerCenterX = x + Player.width / 2;
+        const playerCenterY = y + Player.height / 2;
         
         for (const key of room.keys) {
-            const dist = Utils.distance(playerCenter.x, playerCenter.y, key.x + 14, key.y + 14);
-            if (dist < 50) {
+            const dist = Utils.distance(playerCenterX, playerCenterY, key.x + 14, key.y + 14);
+            if (dist < 60) {
                 return key;
             }
         }
@@ -182,11 +232,14 @@ const RoomManager = {
     
     findNearbyPuzzle(x, y, roomId) {
         const room = ROOMS[roomId];
-        const playerCenter = { x: x + Player.width / 2, y: y + Player.height / 2 };
+        if (!room) return null;
+        
+        const playerCenterX = x + Player.width / 2;
+        const playerCenterY = y + Player.height / 2;
         
         for (const puzzle of room.puzzles) {
-            const dist = Utils.distance(playerCenter.x, playerCenter.y, puzzle.x + 20, puzzle.y + 20);
-            if (dist < 60) {
+            const dist = Utils.distance(playerCenterX, playerCenterY, puzzle.x + 20, puzzle.y + 20);
+            if (dist < 70) {
                 return puzzle.id;
             }
         }
@@ -195,18 +248,19 @@ const RoomManager = {
     
     findNearbyHideSpot(x, y, roomId) {
         const room = ROOMS[roomId];
-        const playerCenter = { x: x + Player.width / 2, y: y + Player.height / 2 };
+        if (!room) return null;
+        
+        const playerCenterX = x + Player.width / 2;
+        const playerCenterY = y + Player.height / 2;
         
         for (const furniture of room.furniture) {
             if (!furniture.hideSpot) continue;
             
-            const furnitureCenter = {
-                x: furniture.x + furniture.w / 2,
-                y: furniture.y + furniture.h / 2
-            };
+            const furnitureCenterX = furniture.x + furniture.w / 2;
+            const furnitureCenterY = furniture.y + furniture.h / 2;
             
-            const dist = Utils.distance(playerCenter.x, playerCenter.y, furnitureCenter.x, furnitureCenter.y);
-            if (dist < 70) {
+            const dist = Utils.distance(playerCenterX, playerCenterY, furnitureCenterX, furnitureCenterY);
+            if (dist < 80) {
                 return { ...furniture, id: furniture.hideSpot };
             }
         }
@@ -229,15 +283,17 @@ const RoomManager = {
         this.exitUnlocked = true;
         // Bodrumdaki çıkış kapısını aç
         const bodrumRoom = this.roomElements['bodrum'];
-        const exitDoor = bodrumRoom.querySelector('.exit-door');
-        if (exitDoor) {
-            exitDoor.classList.remove('locked');
+        if (bodrumRoom) {
+            const exitDoor = bodrumRoom.querySelector('.exit-door');
+            if (exitDoor) {
+                exitDoor.classList.remove('locked');
+            }
         }
     },
     
     reset() {
         this.exitUnlocked = false;
         this.createRooms();
-        this.showRoom('salon');
+        this.showRoom('oturma');
     }
 };

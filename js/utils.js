@@ -36,5 +36,11 @@ const Utils = {
     // Değeri sınırla
     clamp(value, min, max) {
         return Math.max(min, Math.min(max, value));
+    },
+    
+    // Mobil cihaz kontrolü
+    isMobile() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+               (window.innerWidth <= 800);
     }
 };

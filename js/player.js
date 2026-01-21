@@ -20,6 +20,14 @@ const Player = {
         
         this.element = Utils.$('player');
         this.element.className = `player ${characterId}`;
+        
+        // Karakter emoji'sini ayarla
+        const sprite = this.element.querySelector('.player-sprite');
+        if (sprite) {
+            sprite.style.background = this.character.color;
+            sprite.setAttribute('data-emoji', this.character.emoji);
+        }
+        
         this.updatePosition();
     },
     
@@ -32,15 +40,22 @@ const Player = {
         
         // Hareket
         let dx = 0, dy = 0;
-        if (Input.keys.w) dy -= currentSpeed;
-        if (Input.keys.s) dy += currentSpeed;
-        if (Input.keys.a) dx -= currentSpeed;
-        if (Input.keys.d) dx += currentSpeed;
         
-        // Çapraz hareket normalizasyonu
-        if (dx !== 0 && dy !== 0) {
-            dx *= 0.707;
-            dy *= 0.707;
+        // Mobil joystick desteği
+        if (Input.joystick.active) {
+            dx = Input.joystick.dx * currentSpeed;
+            dy = Input.joystick.dy * currentSpeed;
+        } else {
+            if (Input.keys.w) dy -= currentSpeed;
+            if (Input.keys.s) dy += currentSpeed;
+            if (Input.keys.a) dx -= currentSpeed;
+            if (Input.keys.d) dx += currentSpeed;
+            
+            // Çapraz hareket normalizasyonu
+            if (dx !== 0 && dy !== 0) {
+                dx *= 0.707;
+                dy *= 0.707;
+            }
         }
         
         // Yeni pozisyon
@@ -48,13 +63,12 @@ const Player = {
         const newY = this.y + dy;
         
         // Sınır kontrolü
-        const minY = 60; // HUD altı
-        const maxX = CONFIG.CANVAS_WIDTH - this.width;
-        const maxY = CONFIG.CANVAS_HEIGHT - this.height + 40;
+        const minY = 80;
+        const maxX = CONFIG.CANVAS_WIDTH - this.width - 10;
+        const maxY = CONFIG.CANVAS_HEIGHT - this.height;
         
         // Mobilya çarpışma kontrolü
         const room = ROOMS[gameState.currentRoom];
-        const playerRect = { x: newX, y: newY, w: this.width, h: this.height };
         
         let canMoveX = true;
         let canMoveY = true;
@@ -75,7 +89,7 @@ const Player = {
         
         // Pozisyonu güncelle
         if (canMoveX) {
-            this.x = Utils.clamp(newX, 0, maxX);
+            this.x = Utils.clamp(newX, 10, maxX);
         }
         if (canMoveY) {
             this.y = Utils.clamp(newY, minY, maxY);

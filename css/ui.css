@@ -9,30 +9,31 @@
     left: 0;
     right: 0;
     height: 40px;
-    background: linear-gradient(180deg, rgba(15,15,26,0.95), rgba(15,15,26,0.8));
+    background: linear-gradient(180deg, rgba(15,15,26,0.95), rgba(15,15,26,0.85));
     border-bottom: 2px solid #334155;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 15px;
+    padding: 0 10px;
     z-index: 100;
 }
 
 .hud-left, .hud-right {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
 }
 
 .stat-display {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
+    font-size: 14px;
 }
 
 .bar-container {
-    width: 100px;
-    height: 12px;
+    width: 70px;
+    height: 10px;
     background: #1e293b;
     border: 2px solid #334155;
     overflow: hidden;
@@ -43,22 +44,17 @@
     transition: width 0.2s;
 }
 
-.health-bar .bar-fill {
-    background: linear-gradient(90deg, #991b1b, #ef4444);
-}
-
-.stamina-bar .bar-fill {
-    background: linear-gradient(90deg, #3b82f6, #60a5fa);
-}
+.health-bar .bar-fill { background: linear-gradient(90deg, #991b1b, #ef4444); }
+.stamina-bar .bar-fill { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
 
 .room-name {
     font-family: 'Press Start 2P', cursive;
-    font-size: 10px;
+    font-size: 8px;
     color: #fbbf24;
 }
 
 .inv-item {
-    font-size: 18px;
+    font-size: 14px;
     color: #e2e8f0;
 }
 
@@ -67,26 +63,27 @@
     position: absolute;
     bottom: 10px;
     right: 10px;
-    width: 120px;
-    height: 90px;
+    width: 100px;
+    height: 75px;
     background: rgba(15,15,26,0.9);
     border: 2px solid #334155;
-    padding: 5px;
+    padding: 4px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    gap: 3px;
+    gap: 2px;
     z-index: 80;
 }
 
 .map-room {
     background: #1e293b;
     border: 1px solid #334155;
-    font-size: 8px;
+    font-size: 7px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #94a3b8;
+    color: #64748b;
+    font-family: 'Press Start 2P', cursive;
 }
 
 .map-room.current {
@@ -95,204 +92,240 @@
     color: white;
 }
 
-.map-room.grandpa-here {
-    position: relative;
-}
-
+.map-room.grandpa-here { position: relative; }
 .map-room.grandpa-here::after {
     content: '👴';
     position: absolute;
-    font-size: 12px;
+    font-size: 10px;
 }
 
 /* Mesaj Popup */
 .message-popup {
     position: absolute;
-    top: 60px;
+    top: 50px;
     left: 50%;
     transform: translateX(-50%);
     background: rgba(15,15,26,0.95);
     border: 2px solid #fbbf24;
-    padding: 10px 20px;
-    font-size: 18px;
+    padding: 8px 16px;
+    font-size: 16px;
     color: #e2e8f0;
     z-index: 200;
     display: none;
+    text-align: center;
+    max-width: 90%;
 }
 
-.message-popup.active {
-    display: block;
-}
+.message-popup.active { display: block; }
 
-/* Kontrol Bilgisi */
+/* Kontrol Bilgisi - Masaüstü */
 .controls-info {
     position: absolute;
     bottom: 5px;
     left: 10px;
     display: flex;
-    gap: 15px;
-    font-size: 12px;
+    gap: 12px;
+    font-size: 11px;
     color: #64748b;
     z-index: 80;
 }
 
-kbd {
-    display: inline-block;
-    padding: 2px 6px;
-    font-family: 'Press Start 2P', cursive;
-    font-size: 6px;
-    background: linear-gradient(180deg, #4a5568, #2d3748);
-    border: 2px solid #718096;
-    border-radius: 3px;
-    color: white;
-    margin: 0 2px;
-}
-
-/* Modallar */
-.modal {
-    position: absolute;
-    inset: 0;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    background: rgba(0,0,0,0.8);
-    z-index: 500;
-}
-
-.modal.active {
-    display: flex;
-}
-
-.modal-content {
-    background: linear-gradient(180deg, #1e293b, #0f172a);
-    border: 4px solid #334155;
-    padding: 25px;
-    text-align: center;
-    max-width: 400px;
+@media (max-width: 600px) {
+    .controls-info { display: none; }
 }
 
 /* Bulmaca Modal */
 .puzzle-modal .modal-content {
-    min-width: 350px;
+    min-width: 300px;
+    max-width: 95%;
 }
 
 .puzzle-title {
     font-family: 'Press Start 2P', cursive;
-    font-size: 14px;
+    font-size: 12px;
     color: #fbbf24;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .puzzle-content {
-    font-size: 18px;
+    font-size: 16px;
     color: #e2e8f0;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     line-height: 1.5;
 }
 
-#puzzle-interactive {
-    margin: 15px 0;
+.puzzle-input-wrapper { margin-bottom: 12px; }
+
+.puzzle-input {
+    width: 100%;
+    max-width: 200px;
+    padding: 10px;
+    font-size: 18px;
+    text-align: center;
+    background: #1e293b;
+    border: 2px solid #334155;
+    color: #e2e8f0;
+    font-family: 'VT323', monospace;
+    border-radius: 4px;
+}
+
+.puzzle-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 .puzzle-feedback {
-    font-size: 16px;
-    margin: 10px 0;
-    min-height: 20px;
-}
-
-.puzzle-hint {
     font-size: 14px;
-    color: #fbbf24;
-    margin: 10px 0;
+    margin: 8px 0;
     min-height: 18px;
 }
 
-/* Saklanma Overlay */
-.hiding-overlay {
-    background: rgba(0,0,0,0.95);
+.puzzle-hint {
+    font-size: 13px;
+    color: #fbbf24;
+    margin: 8px 0;
+    min-height: 16px;
 }
 
-.hiding-content {
-    text-align: center;
-}
+/* Saklanma Overlay */
+.hiding-overlay { background: rgba(0,0,0,0.95); }
+
+.hiding-content { text-align: center; padding: 20px; }
 
 .hiding-text {
-    font-size: 24px;
+    font-size: 22px;
     color: #4ade80;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .peephole {
-    width: 150px;
-    height: 150px;
-    margin: 0 auto 20px;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 15px;
     background: radial-gradient(circle, #1a1a2e 0%, #000 70%);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
+    font-size: 14px;
     border: 3px solid #334155;
 }
 
 .hide-warning {
     color: #ef4444;
-    font-size: 18px;
-    margin-top: 15px;
+    font-size: 16px;
+    margin-top: 12px;
     animation: pulse 0.5s infinite;
     display: none;
 }
 
-/* Oyun Sonu Modalları */
+/* Oyun Sonu */
 .title-lose {
     font-family: 'Press Start 2P', cursive;
-    font-size: 24px;
+    font-size: 20px;
     color: #ef4444;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .title-win {
     font-family: 'Press Start 2P', cursive;
-    font-size: 24px;
+    font-size: 20px;
     color: #4ade80;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
-.game-over-modal p,
-.game-win-modal p {
-    font-size: 18px;
-    margin: 10px 0;
+.game-over-modal p, .game-win-modal p {
+    font-size: 16px;
+    margin: 8px 0;
 }
 
-/* Butonlar */
-.btn {
-    font-family: 'Press Start 2P', cursive;
-    font-size: 10px;
-    padding: 12px 20px;
-    border: 4px solid;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-top: 15px;
+/* MOBİL KONTROLLER */
+#mobile-controls {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 140px;
+    background: rgba(15,15,26,0.9);
+    border-top: 2px solid #334155;
+    z-index: 90;
+    padding: 10px;
 }
 
-.btn:hover {
-    transform: translateY(-2px);
+#mobile-controls.active { display: flex; justify-content: space-between; align-items: center; }
+
+/* Joystick */
+#joystick-area {
+    width: 100px;
+    height: 100px;
+    background: rgba(51,65,85,0.5);
+    border-radius: 50%;
+    border: 3px solid #475569;
+    position: relative;
+    touch-action: none;
 }
 
-.btn-primary {
+#joystick-knob {
+    width: 40px;
+    height: 40px;
     background: linear-gradient(180deg, #4ade80, #166534);
-    border-color: #166534;
-    color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -20px;
+    margin-top: -20px;
+    transition: transform 0.05s;
+    border: 2px solid #22c55e;
 }
 
-.btn-secondary {
-    background: linear-gradient(180deg, #64748b, #475569);
-    border-color: #334155;
-    color: white;
+/* Aksiyon Butonları */
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-.btn-danger {
-    background: linear-gradient(180deg, #ef4444, #991b1b);
-    border-color: #991b1b;
+.action-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+#btn-interact {
+    background: linear-gradient(180deg, #3b82f6, #1d4ed8);
+    border-color: #2563eb;
+}
+
+#btn-hide {
+    background: linear-gradient(180deg, #8b5cf6, #6d28d9);
+    border-color: #7c3aed;
+}
+
+#btn-run {
+    background: linear-gradient(180deg, #f59e0b, #d97706);
+    border-color: #f59e0b;
+}
+
+.action-btn span {
+    font-size: 8px;
     color: white;
+    font-family: 'Press Start 2P', cursive;
+}
+
+@media (max-width: 600px) {
+    #game-canvas { bottom: 140px; }
+    .mini-map { bottom: 150px; }
+    .bar-container { width: 50px; }
+    .room-name { font-size: 7px; }
 }

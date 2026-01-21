@@ -7,6 +7,11 @@ const UI = {
     
     init() {
         this.createCharacterGrid();
+        
+        // Mobil kontrolleri göster/gizle
+        if (Utils.isMobile()) {
+            this.showMobileControls();
+        }
     },
     
     createCharacterGrid() {
@@ -21,27 +26,27 @@ const UI = {
             card.dataset.character = charId;
             
             card.innerHTML = `
-                <div class="character-sprite" style="background:${this.getCharacterColor(charId)};border-radius:50% 50% 40% 40%;"></div>
+                <div class="character-avatar">${char.emoji}</div>
                 <div class="character-name">${char.name}</div>
+                <div class="character-type">${char.type}</div>
                 <div class="character-stats">
-                    ❤️${char.health} ⚡${char.speed} 👁️${Math.round(char.stealth * 100)}%
+                    <span title="Can">❤️${char.health}</span>
+                    <span title="Hız">⚡${char.speed}</span>
+                    <span title="Gizlilik">👁️${Math.round(char.stealth * 100)}%</span>
                 </div>
                 <div class="character-desc">${char.description}</div>
             `;
             
             card.addEventListener('click', () => this.selectCharacter(charId, card));
+            
+            // Mobil için touch event
+            card.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                this.selectCharacter(charId, card);
+            });
+            
             grid.appendChild(card);
         }
-    },
-    
-    getCharacterColor(charId) {
-        const colors = {
-            warrior: 'linear-gradient(180deg, #ef4444, #991b1b)',
-            ninja: 'linear-gradient(180deg, #1f2937, #030712)',
-            mage: 'linear-gradient(180deg, #a855f7, #6b21a8)',
-            scout: 'linear-gradient(180deg, #22c55e, #15803d)'
-        };
-        return colors[charId] || 'gray';
     },
     
     selectCharacter(charId, cardElement) {
@@ -56,14 +61,33 @@ const UI = {
         Utils.$('start-btn').disabled = false;
     },
     
+    showMobileControls() {
+        const mobileControls = Utils.$('mobile-controls');
+        if (mobileControls) {
+            mobileControls.classList.add('active');
+        }
+    },
+    
+    hideMobileControls() {
+        const mobileControls = Utils.$('mobile-controls');
+        if (mobileControls) {
+            mobileControls.classList.remove('active');
+        }
+    },
+    
     showGame() {
         Utils.$('menu-screen').style.display = 'none';
         Utils.$('game-screen').classList.add('active');
+        
+        if (Utils.isMobile()) {
+            this.showMobileControls();
+        }
     },
     
     showMenu() {
         Utils.$('menu-screen').style.display = 'flex';
         Utils.$('game-screen').classList.remove('active');
+        this.hideMobileControls();
     },
     
     updateHealthBar(current, max) {
@@ -100,10 +124,13 @@ const UI = {
         const minimap = Utils.$('mini-map');
         minimap.innerHTML = '';
         
-        const roomOrder = ['yatak', 'bodrum', 'salon', 'mutfak'];
+        // Oda düzeni: üst satır (yatak, bodrum), alt satır (oturma, mutfak)
+        const roomOrder = ['yatak', 'bodrum', 'oturma', 'mutfak'];
         
         for (const roomId of roomOrder) {
             const room = ROOMS[roomId];
+            if (!room) continue;
+            
             const mapRoom = document.createElement('div');
             mapRoom.className = 'map-room';
             
@@ -116,12 +143,12 @@ const UI = {
             
             // Kısa isim
             const shortNames = {
-                salon: 'SAL',
+                oturma: 'ODA',
                 mutfak: 'MUT',
                 yatak: 'YTK',
                 bodrum: 'BOD'
             };
-            mapRoom.textContent = shortNames[roomId];
+            mapRoom.textContent = shortNames[roomId] || roomId.substring(0, 3).toUpperCase();
             
             minimap.appendChild(mapRoom);
         }
@@ -162,7 +189,10 @@ const UI = {
     },
     
     setHideWarning(show) {
-        Utils.$('hide-warning').style.display = show ? 'block' : 'none';
+        const warning = Utils.$('hide-warning');
+        if (warning) {
+            warning.style.display = show ? 'block' : 'none';
+        }
     },
     
     showGameOver(stats) {
@@ -178,6 +208,7 @@ const UI = {
         Utils.$('game-win-stats').innerHTML = `
             <p>⏱️ Süre: ${stats.time}</p>
             <p>🎭 Karakter: ${stats.characterName}</p>
+            <p>🏆 TEBRİKLER!</p>
         `;
         Utils.$('game-win').classList.add('active');
     },
